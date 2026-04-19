@@ -1,11 +1,10 @@
 import PostCard from "../components/PostCard";
 
-const posts = [1,2,3,4,5,6];
+const posts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 export default function Home() {
   return (
     <div>
-      {/* Hero Section */}
       <div className="mb-10 text-center">
         <h1 className="text-4xl font-bold tracking-tight">
           Discover Modern Blogs
@@ -15,7 +14,6 @@ export default function Home() {
         </p>
       </div>
 
-      {/* Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((p) => (
           <PostCard key={p} />
