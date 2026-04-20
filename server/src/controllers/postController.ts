@@ -2,12 +2,19 @@ import { Request, Response } from "express";
 import Post from "../models/postScema";
 
 export const postCreate = async (req: Request, res: Response) => {
-  const { title, description, image, category } = req.body;
+  const { title, description, category } = req.body;
+  const image = req.file?.path;
   try {
     if (!title || !description || !category) {
       return res.status(400).json({
         message: "Title, description and category are required.",
       });
+    }
+
+    if(!image){
+      return res.status(400).json({
+        message: "Image is Required!"
+      })
     }
 
     const newPost = new Post({

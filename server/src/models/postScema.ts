@@ -40,6 +40,8 @@ const postSchema = new Schema(
 postSchema.pre<IPost>("save", function () {
   if (this.description) {
     const words = this.description.split(" ").length;
+    console.log(words);
+
     const minutes = Math.ceil(words / 200);
     this.readTime = minutes;
   }
