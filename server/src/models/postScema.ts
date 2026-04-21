@@ -20,8 +20,15 @@ const postSchema = new Schema(
       required: true,
     },
     image: {
-      type: String,
-      default: "",
+      url: {
+        type: String,
+        default: "",
+      },
+
+      public_id: {
+        type: String,
+        default: "",
+      },
     },
     category: {
       type: String,
@@ -40,8 +47,6 @@ const postSchema = new Schema(
 postSchema.pre<IPost>("save", function () {
   if (this.description) {
     const words = this.description.split(" ").length;
-    console.log(words);
-
     const minutes = Math.ceil(words / 200);
     this.readTime = minutes;
   }
