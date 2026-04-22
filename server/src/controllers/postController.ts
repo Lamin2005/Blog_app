@@ -18,6 +18,24 @@ export const posts = async (req: Request, res: Response) => {
   }
 };
 
+
+export const postDetail = async (req : Request, res : Response) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.status(200).json({ data: post });
+  } catch (error) {
+    console.log("Error getting Detail post:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const postCreate = async (req: Request, res: Response) => {
   try {
     const { title, description, category } = req.body;

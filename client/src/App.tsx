@@ -20,7 +20,7 @@ function App() {
           element:<CreatePost/>
         },
         {
-          path: "/post-detail",
+          path: "/post-detail/:id",
           element: <PostDetail />,
         },
 
