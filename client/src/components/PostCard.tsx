@@ -11,6 +11,7 @@ export default function PostCard({ post }: Props) {
       <div className="overflow-hidden">
         <img
           src={post.image.url}
+          loading="lazy"
           className="w-full h-48 object-cover group-hover:scale-105 transition duration-300"
         />
       </div>

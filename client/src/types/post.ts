@@ -8,4 +8,6 @@ export interface Posts {
   };
   category: string;
   readTime: string;
+  updatedAt: string;
+  createdAt: string;
 }

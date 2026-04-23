@@ -18,7 +18,6 @@ export const posts = async (req: Request, res: Response) => {
   }
 };
 
-
 export const postDetail = async (req : Request, res : Response) => {
   try {
     const { id } = req.params;

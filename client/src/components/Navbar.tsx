@@ -9,20 +9,20 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-slate-900/70 backdrop-blur-lg border-b border-slate-800">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link
-          className="text-2xl font-bold tracking-tight text-indigo-500"
+          className="text-2xl font-bold tracking-tight text-indigo-500 cursor-pointer"
           to={"/"}
         >
           BlogApp
         </Link>
 
         <nav className="hidden md:flex items-center ml-12 gap-8 text-sm font-medium text-white">
-          <Link to="/" className="hover:text-indigo-400 transition">
+          <Link to="/" className="hover:text-indigo-400 transition cursor-pointer">
             Home
           </Link>
-          <Link to="/create" className="hover:text-indigo-400 transition">
+          <Link to="/create" className="hover:text-indigo-400 transition cursor-pointer">
             Write
           </Link>
-          <Link to="/profile" className="hover:text-indigo-400 transition">
+          <Link to="/profile" className="hover:text-indigo-400 transition cursor-pointer">
             Profile
           </Link>
 
