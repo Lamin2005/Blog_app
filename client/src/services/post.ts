@@ -18,3 +18,12 @@ export const createPosts = async (formData: FormData) => {
 
   return data.data;
 };
+
+export const updatePosts = async (id: string, formData: FormData) => {
+  const { data } = await axios.patch(
+    `${API_URL}/api/posts/edit/${id}`,
+    formData,
+  );
+
+  return data.data;
+};

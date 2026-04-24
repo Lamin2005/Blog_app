@@ -14,6 +14,6 @@ router.get("/", posts);
 router.get("/post-detail/:id",postDetail);
 router.post("/create", upload.single("image"), postCreate);
 router.delete("/delete/:id", postDelete);
-router.patch("/update/:id", upload.single("image"), postUpdate);
+router.patch("/edit/:id", upload.single("image"), postUpdate);
 
 export default router;

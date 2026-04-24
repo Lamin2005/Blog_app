@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Posts } from "../types/post";
 import { getPostDetail } from "../services/post";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PostDetailSkeleton from "../components/PostDetailSkeleton";
 
 export default function PostDetail() {
@@ -39,9 +39,21 @@ export default function PostDetail() {
         className="w-full h-80 object-cover rounded-2xl mb-6"
       />
 
-      <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
-        {post?.title}
-      </h1>
+      <div className="flex items-start justify-between mt-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
+            {post?.title}
+          </h1>
+
+          <span className="inline-block mt-2 px-4 py-1.5 text-xs font-semibold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-full">
+            {post?.category}
+          </span>
+        </div>
+
+        <Link to={`/edit/${id}`} className="px-4 cursor-pointer py-2 text-sm bg-slate-800 border border-slate-700 rounded-xl text-white hover:bg-slate-700 transition">
+          ✏️ Edit
+        </Link>
+      </div>
 
       <div className="flex items-center gap-3 mt-3 text-sm text-gray-500">
         <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">

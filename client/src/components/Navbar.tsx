@@ -29,12 +29,12 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <button className="px-4 py-2 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition">
+          <Link to="/login" className="cursor-pointer px-4 py-2 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition">
             Login
-          </button>
-          <button className="px-4 py-2 rounded-xl border border-indigo-500 text-indigo-400 hover:bg-indigo-500 hover:text-white transition">
+          </Link>
+          <Link to="/register" className="cursor-pointer px-4 py-2 rounded-xl border border-indigo-500 text-indigo-400 hover:bg-indigo-500 hover:text-white transition">
             Register
-          </button>
+          </Link>
         </div>
 
         <button onClick={() => setOpen(!open)} className="md:hidden text-white">
@@ -69,12 +69,12 @@ export default function Navbar() {
           </nav>
 
           <div className="flex flex-col gap-3 pt-3 border-t border-slate-800">
-            <button className="px-4 py-2 rounded-xl bg-indigo-500 text-white">
+            <Link to="/login" className="cursor-pointer px-4 py-2 rounded-xl bg-indigo-500 text-white">
               Login
-            </button>
-            <button className="px-4 py-2 rounded-xl border border-indigo-500 text-indigo-400">
+            </Link>
+            <Link to="/register" className="cursor-pointer px-4 py-2 rounded-xl border border-indigo-500 text-indigo-400">
               Register
-            </button>
+            </Link>
           </div>
         </div>
       )}

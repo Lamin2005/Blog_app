@@ -1,16 +1,43 @@
-import React, { useState } from "react";
-import { createPosts } from "../services/post";
+import React, { useEffect, useState } from "react";
+import { getPostDetail, updatePosts } from "../services/post";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
-export default function CreatePost() {
+export default function EditPost() {
   const [form, setForm] = useState({
     title: "",
     category: "",
     description: "",
   });
 
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        const data = await getPostDetail(id);
+        setForm({
+          title: data?.title,
+          category: data?.category,
+          description: data?.description,
+        });
+        setImage(data?.image.url);
+        setPreview(data?.image.url);
+      } catch (error) {
+        console.error("Error fetching post:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -53,16 +80,19 @@ export default function CreatePost() {
         formData.append("image", image);
       }
 
-      await createPosts(formData);
+      if (!id) return;
+
+      await updatePosts(id, formData);
 
       setForm({ title: "", category: "", description: "" });
       setImage(null);
       setPreview(undefined);
 
-      alert("Post created successfully 🚀");
+      alert("Post updated successfully 🚀");
+      navigate(`/post-detail/${id}`);
     } catch (error) {
       console.log(error);
-      alert("Error creating post");
+      alert("Error updating post");
     } finally {
       setLoading(false);
     }
@@ -70,7 +100,7 @@ export default function CreatePost() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-100 mb-6">Create New Post</h1>
+      <h1 className="text-3xl font-bold text-gray-100 mb-6">Edit Your Post</h1>
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
         <form className="space-y-5 " onSubmit={handlSubmit}>
@@ -133,8 +163,14 @@ export default function CreatePost() {
              ${loading ? "bg-indigo-400 cursor-not-allowed" : "bg-indigo-500 hover:bg-indigo-600 cursor-pointer"}
                 `}
           >
-            {loading ? "Publishing Post..." : "Publish Post"}
+            {loading ? "Updating Post..." : "Update Post"}
           </button>
+          <Link
+            to={`/post-detail/${id}`}
+            className="w-full flex justify-center  sm:justify-end text-indigo-500 font-medium hover:underline"
+          >
+            ← Back to Post Detail
+          </Link>
         </form>
       </div>
     </div>
