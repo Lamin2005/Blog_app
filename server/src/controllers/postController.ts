@@ -18,7 +18,7 @@ export const posts = async (req: Request, res: Response) => {
   }
 };
 
-export const postDetail = async (req : Request, res : Response) => {
+export const postDetail = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -144,6 +144,42 @@ export const postUpdate = async (req: Request, res: Response) => {
     console.log("Update Post Error : ", error);
     res.status(500).json({
       message: "Server Error",
+    });
+  }
+};
+
+export const postSearch = async (req: Request, res: Response) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || typeof q !== "string") {
+      return res.status(400).json({
+        message: "Query parameter 'q' is required",
+      });
+    }
+
+    if (q.trim().length < 5) {
+      return res.status(400).json({
+        message: "Search must be at least 5 characters",
+      });
+    }
+
+    const escapeRegex = (text: string) =>
+      text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const searchRegex = new RegExp(escapeRegex(q), "i");
+
+    const posts = await Post.find({
+      $or: [
+        { title: { $regex: searchRegex } },
+      ],
+    });
+
+    res.status(200).json({ data: posts });
+  } catch (error) {
+    console.error("Error searching posts:", error);
+    res.status(500).json({
+      message: `Internal Server Error ${error}`,
     });
   }
 };

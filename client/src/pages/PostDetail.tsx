@@ -33,52 +33,65 @@ export default function PostDetail() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <img
-        src={post?.image.url}
-        className="w-full h-80 object-cover rounded-2xl mb-6"
-      />
+  <div className="max-w-3xl mx-auto px-3 sm:px-6">
 
-      <div className="flex items-start justify-between mt-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
-            {post?.title}
-          </h1>
+  
+  <img
+    src={post?.image.url}
+    className="w-full h-44 xs:h-52 sm:h-72 md:h-96 object-cover rounded-xl sm:rounded-2xl mb-5"
+  />
 
-          <span className="inline-block mt-2 px-4 py-1.5 text-xs font-semibold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-full">
-            {post?.category}
-          </span>
-        </div>
+  
+  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 
-        <Link to={`/edit/${id}`} className="px-4 cursor-pointer py-2 text-sm bg-slate-800 border border-slate-700 rounded-xl text-white hover:bg-slate-700 transition">
-          ✏️ Edit
-        </Link>
-      </div>
+    <div>
+      <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight leading-snug break-words">
+        {post?.title}
+      </h1>
 
-      <div className="flex items-center gap-3 mt-3 text-sm text-gray-500">
-        <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
-          A
-        </div>
-        <span>Admin</span>
-        <span>•</span>
-
-        {post && (
-          <span>
-            {" "}
-            {new Date(post?.createdAt).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-            })}
-          </span>
-        )}
-
-        <span>•</span>
-        <span>{post?.readTime} min read</span>
-      </div>
-
-      <div className="mt-8 space-y-5 text-gray-400 leading-relaxed text-[17px]">
-        <p>{post?.description}</p>
-      </div>
+      <span className="inline-block mt-2 px-3 py-1 text-[10px] xs:text-xs font-semibold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-full">
+        {post?.category}
+      </span>
     </div>
+
+    <Link
+      to={`/edit/${id}`}
+      className="w-full sm:w-auto text-center px-3 py-2 text-xs xs:text-sm bg-slate-800 border border-slate-700 rounded-lg sm:rounded-xl text-white hover:bg-slate-700 transition"
+    >
+      ✏️ Edit
+    </Link>
+
+  </div>
+
+  
+  <div className="flex flex-wrap items-center gap-1.5 xs:gap-2 sm:gap-3 mt-3 text-[10px] xs:text-xs sm:text-sm text-gray-500">
+
+    <div className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
+      A
+    </div>
+
+    <span>Admin</span>
+    <span>•</span>
+
+    {post && (
+      <span>
+        {new Date(post.createdAt).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })}
+      </span>
+    )}
+
+    <span>•</span>
+    <span>{post?.readTime} min read</span>
+  </div>
+
+  {/* DESCRIPTION */}
+  <div
+    className="mt-6 sm:mt-8 prose prose-invert max-w-none text-[14px] xs:text-[15px] sm:text-[17px] leading-relaxed break-words"
+    dangerouslySetInnerHTML={{ __html: post?.description || "" }}
+  />
+
+</div>
   );
 }

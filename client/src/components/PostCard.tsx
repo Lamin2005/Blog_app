@@ -16,7 +16,6 @@ export default function PostCard({ post }: Props) {
         />
       </div>
 
-      {/* Content */}
       <div className="p-5">
         <p className="text-xs text-indigo-500 font-medium mb-2">
           {post.category}
