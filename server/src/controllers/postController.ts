@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Post from "../models/postScema";
+import Post from "../models/postSchema";
 import cloudinary from "../config/cloudinary";
 
 export const posts = async (req: Request, res: Response) => {
