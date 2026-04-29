@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/userSchema";
 import { generateToken } from "../utils/generateToken";
+import { AuthenticatedRequest } from "../middleware/authmiddleware";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -90,6 +91,67 @@ export const logout = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log("Logout Error:", error);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+export const profile = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const user = req.user;
+    res.status(200).json({
+      message: "User profile",
+      data: user,
+    });
+  } catch (error) {
+    console.log("Profile Error:", error);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+export const updateProfile = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const user = req.user?._id;
+    const { name, email, password } = req.body;
+
+    if (!user) {
+      return res.status(404).json({
+        message: "No Authenicated!",
+      });
+    }
+
+    const existingUser = await User.findById(user._id);
+
+    if (!existingUser) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    if (name) existingUser.name = name ?? existingUser.name;
+    if (email) existingUser.email = email ?? existingUser.email;
+    if (password) existingUser.password = password ?? existingUser.password;
+
+    const updatedUser = await existingUser.save();
+
+    const userData = {
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+    };
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      data: userData,
+    });
+  } catch (error) {
+    console.log("Update Profile Error:", error);
     res.status(500).json({
       message: "Server Error",
     });
