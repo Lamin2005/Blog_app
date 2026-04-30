@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function RegisterForm() {
   return (
     <div className="flex items-center justify-center px-4">
@@ -35,9 +37,9 @@ function RegisterForm() {
 
         <p className="text-sm text-slate-500 text-center mt-6">
           Already have an account?{" "}
-          <span className="text-indigo-400 cursor-pointer hover:underline">
+          <Link to="/login" className="text-indigo-400 cursor-pointer hover:underline">
             Login
-          </span>
+          </Link>
         </p>
       </div>
     </div>
