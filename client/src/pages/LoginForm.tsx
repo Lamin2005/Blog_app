@@ -4,6 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas/login";
 import * as z from "zod";
 import { toast } from "react-toastify";
+import { useLoginMutation } from "../features/api/userapi";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../features/auth/AuthSlice";
 
 function LoginForm() {
   type FormData = z.infer<typeof loginSchema>;
@@ -16,9 +19,20 @@ function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const submitHandler = (data: FormData) => {
-    console.log(data);
-    toast.success("Login successful!");
+  const [loginMutation] = useLoginMutation();
+  const dispatch = useDispatch();
+
+  const submitHandler = async (data: FormData) => {
+    try {
+      const response = await loginMutation(data).unwrap();
+      console.log(response);
+      const res = response.data;
+      dispatch(setCredentials(res));
+      toast.success(`${response.message}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(`${(error as { data: { message: string } }).data.message}`);
+    }
   };
 
   return (
@@ -53,7 +67,7 @@ function LoginForm() {
           </div>
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 transition text-white font-medium"
+            className="w-full cursor-pointer py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 transition text-white font-medium"
             disabled={isLoading}
           >
             Login

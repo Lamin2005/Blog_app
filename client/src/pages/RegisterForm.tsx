@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../schemas/register";
 import * as z from "zod";
 import { toast } from "react-toastify";
+import { useRegisterMutation } from "../features/api/userapi";
+import { useNavigate } from "react-router-dom";
 
 function RegisterForm() {
   type FormData = z.infer<typeof registerSchema>;
@@ -12,13 +14,24 @@ function RegisterForm() {
     register,
     handleSubmit,
     formState: { errors, isLoading },
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    toast.success("Registration successful!");
+  const [registerMutation] = useRegisterMutation();
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await registerMutation(data).unwrap();
+      toast.success(`${response.message}`);
+      reset();
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      toast.error(`${(error as { data: { message: string } }).data.message}`);
+    }
   };
 
   return (
@@ -65,7 +78,7 @@ function RegisterForm() {
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 transition text-white font-medium"
+            className="w-full cursor-pointer py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 transition text-white font-medium"
             disabled={isLoading}
           >
             Register

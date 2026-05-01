@@ -8,6 +8,8 @@ import EditPost from "./pages/EditPost";
 import NotFound from "./pages/NotFound";
 import RegisterForm from "./pages/RegisterForm";
 import LoginForm from "./pages/LoginForm";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 function App() {
   const router = createBrowserRouter([
@@ -47,7 +49,11 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
 }
 
 export default App;
