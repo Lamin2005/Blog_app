@@ -1,4 +1,3 @@
-import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
@@ -10,6 +9,7 @@ import RegisterForm from "./pages/RegisterForm";
 import LoginForm from "./pages/LoginForm";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import Profile from "./pages/Profile";
 
 function App() {
   const router = createBrowserRouter([
@@ -40,6 +40,10 @@ function App() {
         {
           path: "/register",
           element: <RegisterForm />,
+        },
+        {
+          path: "/profile",
+          element: <Profile />,
         },
       ],
     },

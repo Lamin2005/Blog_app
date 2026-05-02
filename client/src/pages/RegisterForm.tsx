@@ -6,6 +6,9 @@ import * as z from "zod";
 import { toast } from "react-toastify";
 import { useRegisterMutation } from "../features/api/userapi";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
+import { useEffect } from "react";
 
 function RegisterForm() {
   type FormData = z.infer<typeof registerSchema>;
@@ -21,6 +24,13 @@ function RegisterForm() {
 
   const [registerMutation] = useRegisterMutation();
   const navigate = useNavigate();
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [userInfo, navigate]);
 
   const onSubmit = async (data: FormData) => {
     try {

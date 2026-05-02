@@ -8,6 +8,10 @@ export interface AuthenticatedRequest extends Request {
     _id: Types.ObjectId;
     name: string;
     email: string;
+    images: {
+      public_id: string;
+      url: string;
+    };
   };
 }
 

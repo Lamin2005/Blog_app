@@ -2,10 +2,18 @@ import { Request, Response } from "express";
 import User from "../models/userSchema";
 import { generateToken } from "../utils/generateToken";
 import { AuthenticatedRequest } from "../middleware/authmiddleware";
+import cloudinary from "../config/cloudinary";
 
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body || {};
+    const file = req.file as Express.Multer.File;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "Name, email and password are required",
+      });
+    }
 
     const existingUser = await User.findOne({ email });
 
@@ -19,6 +27,10 @@ export const register = async (req: Request, res: Response) => {
       name,
       email,
       password,
+      images: {
+        url: "",
+        public_id: "",
+      },
     });
 
     res.status(201).json({
@@ -85,7 +97,11 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    });
     res.status(200).json({
       message: "Logout successful",
     });
@@ -134,6 +150,19 @@ export const updateProfile = async (
       });
     }
 
+    if (req.file) {
+      const file = req.file as Express.Multer.File;
+
+      if (existingUser.images?.public_id) {
+        await cloudinary.uploader.destroy(existingUser.images.public_id);
+      }
+
+      existingUser.images = {
+        url: file.path,
+        public_id: file.filename,
+      };
+    }
+
     if (name) existingUser.name = name ?? existingUser.name;
     if (email) existingUser.email = email ?? existingUser.email;
     if (password) existingUser.password = password ?? existingUser.password;
@@ -144,6 +173,7 @@ export const updateProfile = async (
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      images: updatedUser.images,
     };
 
     res.status(200).json({

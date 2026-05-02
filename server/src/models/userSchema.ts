@@ -1,28 +1,48 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 
 interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  images: {
+    url: string;
+    public_id: string;
+  };
   isMatched(password: string): Promise<boolean>;
 }
 
-const userSchema = new Schema<IUser>({
-  name: {
-    type: String,
-    required: true,
+const userSchema = new Schema<IUser>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    images: {
+      url: {
+        type: String,
+        default: "",
+      },
+
+      public_id: {
+        type: String,
+        default: "",
+      },
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
+  {
+    timestamps: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+);
 
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) {

@@ -4,6 +4,10 @@ interface UserInfo {
   _id: string;
   name: string;
   email: string;
+  images: {
+    url: string;
+    public_id: string;
+  };
 }
 
 interface AuthState {
@@ -25,12 +29,12 @@ const authSlice = createSlice({
       localStorage.setItem("userInfo", JSON.stringify(action.payload));
     },
 
-    logout: (state) => {
+    logoutuser: (state) => {
       state.userInfo = null;
       localStorage.removeItem("userInfo");
     },
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logoutuser } = authSlice.actions;
 export default authSlice.reducer;

@@ -2,7 +2,7 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../config/cloudinary";
 
-const storage = new CloudinaryStorage({
+const Poststorage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "blog_posts",
@@ -18,12 +18,12 @@ const fileFilter: multer.Options["fileFilter"] = (req, file, cb) => {
   }
 };
 
-const upload = multer({
-  storage,
+const Postupload = multer({
+  storage: Poststorage,
   fileFilter,
   limits: {
     fileSize: 2 * 1024 * 1024,
   },
 });
 
-export default upload;
+export default Postupload;

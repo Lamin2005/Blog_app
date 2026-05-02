@@ -7,15 +7,15 @@ import {
   postSearch,
 } from "../controllers/postController";
 import express from "express";
-import upload from "../middleware/upload";
+import Postupload from "../middleware/Postupload";
 
 const router = express.Router();
 
 router.get("/", posts);
 router.get("/post-detail/:id",postDetail);
-router.post("/create", upload.single("image"), postCreate);
+router.post("/create", Postupload.single("image"), postCreate);
 router.delete("/delete/:id", postDelete);
-router.patch("/edit/:id", upload.single("image"), postUpdate);
+router.patch("/edit/:id", Postupload.single("image"), postUpdate);
 router.get("/search", postSearch);
 
 

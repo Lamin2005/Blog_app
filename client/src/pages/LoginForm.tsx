@@ -7,6 +7,10 @@ import { toast } from "react-toastify";
 import { useLoginMutation } from "../features/api/userapi";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/auth/AuthSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
+import { useEffect } from "react";
 
 function LoginForm() {
   type FormData = z.infer<typeof loginSchema>;
@@ -21,6 +25,14 @@ function LoginForm() {
 
   const [loginMutation] = useLoginMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [userInfo, navigate]);
 
   const submitHandler = async (data: FormData) => {
     try {
@@ -29,6 +41,7 @@ function LoginForm() {
       const res = response.data;
       dispatch(setCredentials(res));
       toast.success(`${response.message}`);
+      navigate("/");
     } catch (error) {
       console.error(error);
       toast.error(`${(error as { data: { message: string } }).data.message}`);

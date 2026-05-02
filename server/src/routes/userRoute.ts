@@ -3,6 +3,7 @@ import {
   register,
   profile,
   updateProfile,
+  logout,
 } from "../controllers/userController";
 import express from "express";
 import { authMiddleware } from "../middleware/authmiddleware";
@@ -15,5 +16,7 @@ router
   .route("/profile")
   .get(authMiddleware, profile)
   .put(authMiddleware, updateProfile);
+
+router.post("/logout", logout);
 
 export default router;
