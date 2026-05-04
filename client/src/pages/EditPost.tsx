@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getPostDetail, updatePosts } from "../services/post";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function EditPost() {
   const [form, setForm] = useState({
@@ -63,7 +64,7 @@ export default function EditPost() {
       form.description == "" ||
       !image
     ) {
-      alert("Please fill all input!");
+      toast.error("Please fill all input!");
       return;
     }
 
@@ -88,11 +89,10 @@ export default function EditPost() {
       setImage(null);
       setPreview(undefined);
 
-      alert("Post updated successfully 🚀");
+      toast.success("Post updated successfully 🚀");
       navigate(`/post-detail/${id}`);
     } catch (error) {
-      console.log(error);
-      alert("Error updating post");
+      toast.error((error as Error).message || "Error updating post");
     } finally {
       setLoading(false);
     }

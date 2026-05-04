@@ -5,12 +5,16 @@ import type { RootState } from "../store";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { logoutuser } from "../features/auth/AuthSlice";
+import { Posts } from "../types/post";
+import { useState } from "react";
+import { deletePosts, onlyUserPosts } from "../services/post";
 
 export default function Profile() {
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [loading, setloading] = useState(true);
+  const [posts, setPosts] = useState<Posts[]>([]);
   const [logout, { isLoading }] = useLogoutMutation();
 
   useEffect(() => {
@@ -18,6 +22,23 @@ export default function Profile() {
       navigate("/login");
     }
   }, [userInfo, navigate]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await onlyUserPosts();
+        console.log(response);
+
+        setPosts(response);
+      } catch (error) {
+        console.error("Error fetching user posts:", error);
+      } finally {
+        setloading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -33,27 +54,16 @@ export default function Profile() {
     }
   };
 
-  // dummy posts (FIXED UNIQUE KEY)
-  const posts = [
-    { _id: "1", title: "Post 1" },
-    { _id: "2", title: "Post 2" },
-    { _id: "3", title: "Post 3" },
-    { _id: "4", title: "Post 4" },
-    { _id: "5", title: "Post 5" },
-    { _id: "6", title: "Post 6" },
-    { _id: "7", title: "Post 7" },
-    { _id: "8", title: "Post 8" },
-    { _id: "9", title: "Post 9" },
-    { _id: "10", title: "Post 1" },
-    { _id: "11", title: "Post 2" },
-    { _id: "12", title: "Post 3" },
-    { _id: "13", title: "Post 4" },
-    { _id: "14", title: "Post 5" },
-    { _id: "15", title: "Post 6" },
-    { _id: "16", title: "Post 7" },
-    { _id: "17", title: "Post 8" },
-    { _id: "18", title: "Post 9" },
-  ];
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await deletePosts(id);
+      setPosts(posts.filter((post) => post._id !== id));
+      toast.success(`${response.message}`);
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      toast.error("Failed to delete post");
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
@@ -91,25 +101,59 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* POSTS */}
       <div className="mt-10">
-        <h3 className="text-xl font-semibold text-white mb-4">Your Posts</h3>
+        <h3 className="text-xl font-semibold text-white mb-4">
+          Your Posts - {posts.length > 0 && ` (${posts.length})`}
+        </h3>
 
-        <div className="grid sm:grid-cols-2 gap-4 overflow-y-auto max-h-96 no-scrollbar">
-          {posts.map((post) => (
-            <div
-              key={post._id}
-              className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between"
-            >
-              <Link to={`/post-detail/${post._id}`} className="text-white">
-                {post.title}
-              </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center overflow-y-auto max-h-[400px] no-scrollbar">
+          {loading ? (
+            [...Array(4)].map((_, index) => (
+              <div
+                key={index}
+                className="w-[80%] bg-slate-900 border border-slate-800 rounded-xl p-4 animate-pulse"
+              >
+                <div className="w-full h-36 bg-slate-700 rounded-lg mb-3"></div>
+                <div className="h-4 bg-slate-700 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-slate-700 rounded w-1/2 mb-4"></div>
+                <div className="h-8 bg-slate-700 rounded w-full"></div>
+              </div>
+            ))
+          ) : posts.length > 0 ? (
+            posts.map((post) => (
+              <div
+                key={post._id}
+                className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col gap-3"
+              >
+                <Link to={`/post-detail/${post._id}`} className="text-white">
+                  {post.image?.url && (
+                    <img
+                      src={post.image.url}
+                      alt={post.title}
+                      className="w-full h-36 object-cover rounded-lg hover:scale-105 transition duration-300"
+                    />
+                  )}
+                  <span className="mt-2"> {post.title}</span>
+                </Link>
 
-              <button className="text-red-400 cursor-pointer hover:text-red-500">
-                Delete
-              </button>
-            </div>
-          ))}
+                <button
+                  disabled={loading}
+                  className={`py-2 px-4 rounded-lg text-white ${
+                    loading
+                      ? "bg-red-400 cursor-not-allowed"
+                      : "bg-red-500 hover:bg-red-600 cursor-pointer"
+                  }`}
+                  onClick={() => handleDelete(post._id)}
+                >
+                  Delete
+                </button>
+              </div>
+            ))
+          ) : (
+            <p className="text-slate-400">
+              You have not created any posts yet.
+            </p>
+          )}
         </div>
       </div>
     </div>

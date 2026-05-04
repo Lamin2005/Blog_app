@@ -48,7 +48,7 @@ export const authMiddleware = async (
     next();
   } catch (error) {
     return res.status(401).json({
-      message: "Unauthorized",
+      message: "User token not accessible Unauthorized",
     });
   }
 };

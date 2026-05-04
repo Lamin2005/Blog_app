@@ -73,11 +73,10 @@ export const login = async (req: Request, res: Response) => {
 
     if (user && isPasswordValid) {
       const token = generateToken(user._id);
-
       res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 24 * 60 * 60 * 1000,
       });
     }
@@ -97,10 +96,11 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("token", {
+     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: "lax",
+      maxAge: 0,
     });
     res.status(200).json({
       message: "Logout successful",

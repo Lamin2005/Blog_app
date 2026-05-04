@@ -10,4 +10,12 @@ export interface Posts {
   readTime: string;
   updatedAt: string;
   createdAt: string;
+  user: {
+    _id: string;
+    name: string;
+    images: {
+      public_id: string;
+      url: string;
+    };
+  };
 }

@@ -20,7 +20,6 @@ export default function CreatePost() {
 
   useEffect(() => {
     if (!userInfo) {
-      toast.error("You must be logged in to create a post");
       navigate("/login");
     }
   }, [userInfo, navigate]);

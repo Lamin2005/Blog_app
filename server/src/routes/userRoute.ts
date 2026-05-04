@@ -7,6 +7,7 @@ import {
 } from "../controllers/userController";
 import express from "express";
 import { authMiddleware } from "../middleware/authmiddleware";
+import { userPosts } from "../controllers/postController";
 
 const router = express.Router();
 

@@ -6,6 +6,7 @@ interface IPost extends Document {
   image: string;
   category: string;
   readTime: number;
+  user: mongoose.Schema.Types.ObjectId;
 }
 
 const postSchema = new Schema(
@@ -37,6 +38,11 @@ const postSchema = new Schema(
     readTime: {
       type: Number, // minutes
       default: 1,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
     },
   },
   {
