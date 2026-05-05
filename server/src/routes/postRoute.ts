@@ -10,16 +10,18 @@ import {
 import express from "express";
 import Postupload from "../middleware/Postupload";
 import { authMiddleware } from "../middleware/authmiddleware";
+import { authorizedUser } from "../middleware/authorizeduser";
 
 const router = express.Router();
 
 router.get("/", posts);
 router.get("/post-detail/:id", postDetail);
 router.post("/create", authMiddleware, Postupload.single("image"), postCreate);
-router.delete("/delete/:id", authMiddleware, postDelete);
+router.delete("/delete/:id", authMiddleware, authorizedUser, postDelete);
 router.patch(
   "/edit/:id",
   authMiddleware,
+  authorizedUser,
   Postupload.single("image"),
   postUpdate,
 );

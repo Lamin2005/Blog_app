@@ -14,6 +14,7 @@ export default function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setloading] = useState(true);
+  const [deletingPostId, setDeletingPostId] = useState<string | null>(null);
   const [posts, setPosts] = useState<Posts[]>([]);
   const [logout, { isLoading }] = useLogoutMutation();
 
@@ -56,12 +57,15 @@ export default function Profile() {
 
   const handleDelete = async (id: string) => {
     try {
+      setDeletingPostId(id);
       const response = await deletePosts(id);
       setPosts(posts.filter((post) => post._id !== id));
-      toast.success(`${response.message}`);
+      setDeletingPostId(null);
+      toast.success(`${response}`);
     } catch (error) {
       console.error("Error deleting post:", error);
       toast.error("Failed to delete post");
+      setDeletingPostId(null);
     }
   };
 
@@ -73,6 +77,7 @@ export default function Profile() {
             {userInfo?.images?.url ? (
               <img
                 src={userInfo.images.url}
+                loading="lazy"
                 className="w-28 h-28 rounded-full object-cover border-4 border-slate-800"
               />
             ) : (
@@ -106,9 +111,9 @@ export default function Profile() {
           Your Posts - {posts.length > 0 && ` (${posts.length})`}
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center overflow-y-auto max-h-[400px] no-scrollbar">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center overflow-y-auto max-h-[600px] no-scrollbar">
           {loading ? (
-            [...Array(4)].map((_, index) => (
+            [...Array(6)].map((_, index) => (
               <div
                 key={index}
                 className="w-[80%] bg-slate-900 border border-slate-800 rounded-xl p-4 animate-pulse"
@@ -130,6 +135,7 @@ export default function Profile() {
                     <img
                       src={post.image.url}
                       alt={post.title}
+                      loading="lazy"
                       className="w-full h-36 object-cover rounded-lg hover:scale-105 transition duration-300"
                     />
                   )}
@@ -145,7 +151,7 @@ export default function Profile() {
                   }`}
                   onClick={() => handleDelete(post._id)}
                 >
-                  Delete
+                  {deletingPostId === post._id ? "Deleting..." : "Delete"}
                 </button>
               </div>
             ))

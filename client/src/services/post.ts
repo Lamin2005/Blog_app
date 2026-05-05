@@ -23,7 +23,7 @@ export const createPosts = async (formData: FormData) => {
 
 export const deletePosts = async (id: string) => {
   const { data } = await axios.delete(`${API_URL}/api/posts/delete/${id}`);
-  return data.data;
+  return data.message;
 };
 
 export const updatePosts = async (id: string, formData: FormData) => {
@@ -31,13 +31,12 @@ export const updatePosts = async (id: string, formData: FormData) => {
     `${API_URL}/api/posts/edit/${id}`,
     formData,
   );
-
+  
   return data.data;
 };
 
 export const onlyUserPosts = async () => {
   const { data } = await axios.get(`${API_URL}/api/posts/my-posts`);
-  console.log(data.data);
 
   return data.data;
 };

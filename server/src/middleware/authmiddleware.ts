@@ -26,7 +26,7 @@ export const authMiddleware = async (
 
     if (!token) {
       return res.status(401).json({
-        message: "Unauthorized",
+        message: "Token not included Unauthorized",
       });
     }
 

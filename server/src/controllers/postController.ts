@@ -103,13 +103,6 @@ export const postDelete = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const exitPost = await Post.findById(id);
-    const user = req.user;
-
-    if (user?._id != exitPost?.user) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
 
     if (!exitPost) {
       return res.status(404).json({
@@ -121,11 +114,10 @@ export const postDelete = async (req: AuthenticatedRequest, res: Response) => {
       await cloudinary.uploader.destroy(exitPost.image.public_id);
     }
 
-    const deletePost = await Post.findByIdAndDelete(exitPost.id);
+    await Post.findByIdAndDelete(exitPost.id);
 
     res.status(200).json({
       message: "Post deleted successfully",
-      data: deletePost,
     });
   } catch (error) {
     console.log("Delete Post Error : ", error);
@@ -139,15 +131,8 @@ export const postUpdate = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { title, description, category } = req.body || {};
-    const user = req.user;
 
     const exitPost = await Post.findById(id);
-
-    if (user?._id != exitPost?.user) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
 
     if (!exitPost) {
       return res.status(404).json({

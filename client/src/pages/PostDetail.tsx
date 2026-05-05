@@ -41,6 +41,7 @@ export default function PostDetail() {
     <div className="max-w-3xl mx-auto px-3 sm:px-6">
       <img
         src={post?.image.url}
+        loading="lazy"
         className="w-full h-44 xs:h-52 sm:h-72 md:h-96 object-cover rounded-xl sm:rounded-2xl mb-5"
       />
 
