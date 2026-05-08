@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createPosts } from "../services/post";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store";
-import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
   const [form, setForm] = useState({
@@ -15,14 +12,6 @@ export default function CreatePost() {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | undefined>(undefined);
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login");
-    }
-  }, [userInfo, navigate]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

@@ -67,9 +67,20 @@ export default function PostDetail() {
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5 xs:gap-2 sm:gap-3 mt-3 text-[10px] xs:text-xs sm:text-sm text-gray-500">
-        <div className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
-          {post?.user?.name?.charAt(0)}
-        </div>
+        {post?.user.images.url != "" && (
+          <img
+            src={post?.user.images.url}
+            alt={post?.user.name}
+            loading="lazy"
+            className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold"
+          />
+        )}
+
+        {post?.user.images.url == "" && (
+          <div className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
+            {post?.user.name?.charAt(0).toUpperCase()}
+          </div>
+        )}
 
         <span>{post?.user?.name}</span>
         <span>•</span>

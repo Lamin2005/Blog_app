@@ -7,7 +7,7 @@ import {
 } from "../controllers/userController";
 import express from "express";
 import { authMiddleware } from "../middleware/authmiddleware";
-import { userPosts } from "../controllers/postController";
+import Userupload from "../middleware/Userupload";
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post("/login", login);
 router
   .route("/profile")
   .get(authMiddleware, profile)
-  .put(authMiddleware, updateProfile);
+  .put(authMiddleware,Userupload.single("image"), updateProfile);
 
 router.post("/logout", logout);
 

@@ -7,7 +7,6 @@ import type { RootState } from "../store";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { userInfo } = useSelector((state: RootState) => state.auth);
-
   return (
     <header className="sticky top-0 z-50 bg-slate-900/70 backdrop-blur-lg border-b border-slate-800">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -42,9 +41,20 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           {userInfo ? (
             <>
-              <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-semibold">
-                {userInfo.name?.charAt(0).toUpperCase()}
-              </div>
+              {userInfo.images.url != "" && (
+                <img
+                  src={userInfo.images.url}
+                  alt={userInfo.name}
+                  loading="lazy"
+                  className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold"
+                />
+              )}
+
+              {userInfo.images.url == "" && (
+                <div className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
+                  {userInfo.name?.charAt(0).toUpperCase()}
+                </div>
+              )}
               <p className="text-white">{userInfo.name}</p>
             </>
           ) : (
@@ -99,9 +109,20 @@ export default function Navbar() {
           <div className="flex flex-col gap-3 pt-3 border-t border-slate-800">
             {userInfo ? (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-semibold">
-                  {userInfo.name?.charAt(0).toUpperCase()}
-                </div>
+                {userInfo.images.url != "" && (
+                  <img
+                    src={userInfo.images.url}
+                    alt={userInfo.name}
+                    loading="lazy"
+                    className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold"
+                  />
+                )}
+
+                {userInfo.images.url == "" && (
+                  <div className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
+                    {userInfo.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <p className="text-white">{userInfo.name}</p>
               </div>
             ) : (

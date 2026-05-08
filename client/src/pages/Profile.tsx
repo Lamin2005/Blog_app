@@ -18,12 +18,7 @@ export default function Profile() {
   const [posts, setPosts] = useState<Posts[]>([]);
   const [logout, { isLoading }] = useLogoutMutation();
 
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login");
-    }
-  }, [userInfo, navigate]);
-
+ 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -86,9 +81,9 @@ export default function Profile() {
               </div>
             )}
 
-            <button className="absolute cursor-pointer bottom-0 right-0 bg-gray-500 hover:bg-gray-600 text-white p-2 rounded-full shadow-md">
+            <Link to={"/edit-profile"} className="absolute cursor-pointer bottom-0 right-0 bg-gray-500 hover:bg-gray-600 text-white p-2 rounded-full shadow-md">
               ✏️
-            </button>
+            </Link>
           </div>
 
           <div className="text-center sm:text-left flex-1">

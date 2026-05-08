@@ -77,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: Number(process.env.COOKIE_EXPIRE) * 24 * 60 * 60 * 1000,
       });
     }
 
@@ -96,7 +96,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
-     res.clearCookie("token", {
+    res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -130,26 +130,24 @@ export const profile = async (req: AuthenticatedRequest, res: Response) => {
 
 export const updateProfile = async (
   req: AuthenticatedRequest,
-  res: Response,
+  res: Response
 ) => {
   try {
-    const user = req.user?._id;
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body || {}; // ✅ safe
 
-    if (!user) {
-      return res.status(404).json({
-        message: "No Authenicated!",
-      });
+    const userId = req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const existingUser = await User.findById(user._id);
+    const existingUser = await User.findById(userId);
 
     if (!existingUser) {
-      return res.status(404).json({
-        message: "User not found",
-      });
+      return res.status(404).json({ message: "User not found" });
     }
 
+    // 🖼 IMAGE UPDATE
     if (req.file) {
       const file = req.file as Express.Multer.File;
 
@@ -163,27 +161,19 @@ export const updateProfile = async (
       };
     }
 
-    if (name) existingUser.name = name ?? existingUser.name;
-    if (email) existingUser.email = email ?? existingUser.email;
-    if (password) existingUser.password = password ?? existingUser.password;
+    // ✏️ UPDATE FIELDS
+    if (name) existingUser.name = name;
+    if (email) existingUser.email = email;
+    if (password) existingUser.password = password;
 
     const updatedUser = await existingUser.save();
 
-    const userData = {
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      images: updatedUser.images,
-    };
-
     res.status(200).json({
       message: "Profile updated successfully",
-      data: userData,
+      data: updatedUser,
     });
   } catch (error) {
     console.log("Update Profile Error:", error);
-    res.status(500).json({
-      message: "Server Error",
-    });
+    res.status(500).json({ message: "Server Error" });
   }
 };

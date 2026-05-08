@@ -7,9 +7,9 @@ import EditPost from "./pages/EditPost";
 import NotFound from "./pages/NotFound";
 import RegisterForm from "./pages/RegisterForm";
 import LoginForm from "./pages/LoginForm";
-import { Provider } from "react-redux";
-import { store } from "./store";
 import Profile from "./pages/Profile";
+import ProtectRoute from "./routes/ProtectRoute";
+import EditProfile from "./pages/EditProfile";
 
 function App() {
   const router = createBrowserRouter([
@@ -23,7 +23,11 @@ function App() {
         },
         {
           path: "/create",
-          element: <CreatePost />,
+          element: (
+            <ProtectRoute>
+              <CreatePost />
+            </ProtectRoute>
+          ),
         },
         {
           path: "/post-detail/:id",
@@ -43,7 +47,20 @@ function App() {
         },
         {
           path: "/profile",
-          element: <Profile />,
+          element: (
+            <ProtectRoute>
+              <Profile />
+            </ProtectRoute>
+          ),
+        },
+
+        {
+          path: "/edit-profile",
+          element: (
+            <ProtectRoute>
+              <EditProfile />
+            </ProtectRoute>
+          ),
         },
       ],
     },
@@ -53,11 +70,7 @@ function App() {
     },
   ]);
 
-  return (
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
