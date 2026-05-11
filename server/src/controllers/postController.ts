@@ -173,34 +173,55 @@ export const postUpdate = async (req: AuthenticatedRequest, res: Response) => {
 
 export const postSearch = async (req: Request, res: Response) => {
   try {
-    const { q } = req.query;
+    const search = req.query.q as string;
 
-    if (!q || typeof q !== "string") {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 6;
+
+    if (!search || search.trim() === "") {
       return res.status(400).json({
-        message: "Query parameter 'q' is required",
+        message: "Search query is required",
       });
     }
 
-    if (q.trim().length < 5) {
-      return res.status(400).json({
-        message: "Search must be at least 5 characters",
-      });
-    }
+    const skip = (page - 1) * limit;
 
-    const escapeRegex = (text: string) =>
-      text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const query = {
+      $or: [
+        {
+          title: {
+            $regex: search,
+            $options: "i",
+          },
+        },
 
-    const searchRegex = new RegExp(escapeRegex(q), "i");
+        {
+          category: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ],
+    };
 
-    const posts = await Post.find({
-      $or: [{ title: { $regex: searchRegex } }],
+    const totalPosts = await Post.countDocuments(query);
+
+    const posts = await Post.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      posts,
+      currentPage: page,
+      totalPages: Math.ceil(totalPosts / limit),
+      totalPosts,
     });
-
-    res.status(200).json({ data: posts });
   } catch (error) {
-    console.error("Error searching posts:", error);
+    console.log("Search Error:", error);
+
     res.status(500).json({
-      message: `Internal Server Error ${error}`,
+      message: "Server Error",
     });
   }
 };

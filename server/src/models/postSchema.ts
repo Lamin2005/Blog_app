@@ -58,5 +58,7 @@ postSchema.pre<IPost>("save", function () {
   }
 });
 
+postSchema.index({ title: "text", category: "text" });
+
 const Post = mongoose.model("posts", postSchema);
 export default Post;

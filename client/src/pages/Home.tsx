@@ -6,6 +6,7 @@ import PostSkeleton from "../components/PostSkeleton";
 import { Link } from "react-router-dom";
 
 export default function Home() {
+  const [search, setSearch] = useState<string>("");
   const [posts, setPosts] = useState<Posts[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,6 +43,8 @@ export default function Home() {
             type="text"
             placeholder="Search blogs..."
             className="w-full px-5 py-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">

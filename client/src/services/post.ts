@@ -31,12 +31,20 @@ export const updatePosts = async (id: string, formData: FormData) => {
     `${API_URL}/api/posts/edit/${id}`,
     formData,
   );
-  
+
   return data.data;
 };
 
 export const onlyUserPosts = async () => {
   const { data } = await axios.get(`${API_URL}/api/posts/my-posts`);
+
+  return data.data;
+};
+
+export const searchPosts = async (search: string, page = 1, limit = 6) => {
+  const { data } = await axios.get(
+    `${API_URL}/search?q=${search}&page=${page}&limit=${limit}`,
+  );
 
   return data.data;
 };
