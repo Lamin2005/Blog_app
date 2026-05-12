@@ -15,20 +15,24 @@ export default function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  const { isLoading, isError } = useProfileQuery(undefined, {
+  const { isLoading, isError, error } = useProfileQuery(undefined, {
     skip: !userInfo,
   });
 
   useEffect(() => {
-    if (isLoading || !userInfo) return;
+    if (isLoading || !userInfo || !isError) return;
 
-    if (isError) {
+    const status =
+      typeof error === "object" && error !== null && "status" in error
+        ? (error as { status?: number | string }).status
+        : undefined;
+
+    if (status === 401) {
       dispatch(logoutuser());
       toast.error("Session expired. Please login again");
       navigate("/login");
-      console.log("loop");
     }
-  }, [isLoading, isError, userInfo, dispatch, navigate]);
+  }, [isLoading, isError, error, userInfo, dispatch, navigate]);
 
   return (
     <div className="bg-[#0f172a] min-h-screen text-white">

@@ -5,16 +5,29 @@ import { AuthenticatedRequest } from "../middleware/authmiddleware";
 
 export const posts = async (req: Request, res: Response) => {
   try {
-    const posts = await Post.find();
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 6;
 
-    res.status(201).json({
-      message: "Post get successfully",
-      data: posts,
+    const skip = (page - 1) * limit;
+
+    const totalPosts = await Post.countDocuments();
+
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      posts,
+      currentPage: page,
+      totalPages: Math.ceil(totalPosts / limit),
+      totalPosts,
     });
   } catch (error) {
-    console.error("Error getting post:", error);
+    console.log(error);
+
     res.status(500).json({
-      message: `Internal Server Error ${error}`,
+      message: "Server Error",
     });
   }
 };

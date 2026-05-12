@@ -23,8 +23,6 @@ export default function Profile() {
     const fetchPosts = async () => {
       try {
         const response = await onlyUserPosts();
-        console.log(response);
-
         setPosts(response);
       } catch (error) {
         console.error("Error fetching user posts:", error);

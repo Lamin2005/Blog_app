@@ -4,9 +4,9 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 axios.defaults.withCredentials = true;
 
-export const getPosts = async () => {
-  const { data } = await axios.get(`${API_URL}/api/posts`);
-  return data.data;
+export const getPosts = async (page: number, limit: number) => {
+  const { data } = await axios.get(`${API_URL}/api/posts?page=${page}&limit=${limit}`);
+  return data;
 };
 
 export const getPostDetail = async (id: string) => {
@@ -41,10 +41,18 @@ export const onlyUserPosts = async () => {
   return data.data;
 };
 
-export const searchPosts = async (search: string, page = 1, limit = 6) => {
+export const searchPosts = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
   const { data } = await axios.get(
-    `${API_URL}/search?q=${search}&page=${page}&limit=${limit}`,
+    `${API_URL}/api/posts/search?q=${search}&page=${page}&limit=${limit}`,
   );
 
-  return data.data;
+  if (data.posts) {
+    return data;
+  } else {
+    return [];
+  }
 };
