@@ -130,7 +130,7 @@ export const profile = async (req: AuthenticatedRequest, res: Response) => {
 
 export const updateProfile = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { name, email, password } = req.body || {}; // ✅ safe
@@ -175,5 +175,29 @@ export const updateProfile = async (
   } catch (error) {
     console.log("Update Profile Error:", error);
     res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const userProfile = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const userData = await User.findById(id).select("-password");
+
+    if (!userData) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      data: userData,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
   }
 };

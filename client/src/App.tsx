@@ -10,6 +10,7 @@ import LoginForm from "./pages/LoginForm";
 import Profile from "./pages/Profile";
 import ProtectRoute from "./routes/ProtectRoute";
 import EditProfile from "./pages/EditProfile";
+import OwnerProfile from "./pages/OwnerProfile";
 
 function App() {
   const router = createBrowserRouter([
@@ -52,6 +53,11 @@ function App() {
               <Profile />
             </ProtectRoute>
           ),
+        },
+
+        {
+          path: "/users/:id",
+          element: <OwnerProfile />,
         },
 
         {

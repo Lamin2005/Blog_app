@@ -49,13 +49,7 @@ export default function Home() {
 
     return () => clearTimeout(delayDebounceFn);
   }, [search, page]);
-
-  console.log(search);
-  console.log(posts);
-  console.log(totalpost);
-  console.log(page);
-  console.log(totalpage);
-
+  
   return (
     <div>
       <div className="mb-10 text-center">
