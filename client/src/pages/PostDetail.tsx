@@ -76,7 +76,7 @@ export default function PostDetail() {
           />
         )}
 
-        <Link to={`/users/${post?.user}`}>
+        <Link to={`/users/${post?.user._id}`}>
           {post?.user.images.url == "" && (
             <div className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
               {post?.user.name?.charAt(0).toUpperCase()}

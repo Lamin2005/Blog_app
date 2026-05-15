@@ -3,6 +3,7 @@ import User from "../models/userSchema";
 import { generateToken } from "../utils/generateToken";
 import { AuthenticatedRequest } from "../middleware/authmiddleware";
 import cloudinary from "../config/cloudinary";
+import Post from "../models/postSchema";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -180,7 +181,7 @@ export const updateProfile = async (
 
 export const userProfile = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const userData = await User.findById(id).select("-password");
 
@@ -190,8 +191,13 @@ export const userProfile = async (req: Request, res: Response) => {
       });
     }
 
+    const postData = await Post.find({
+      user: id,
+    }).sort({ createdAt: -1 });
+
     res.status(200).json({
-      data: userData,
+      user: userData,
+      posts: postData,
     });
   } catch (error) {
     console.log(error);
