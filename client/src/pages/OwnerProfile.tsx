@@ -1,4 +1,3 @@
-// import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useOwenerProfileQuery } from "../features/api/userapi";
 
@@ -23,7 +22,6 @@ function OwnerProfile() {
   }
 
   const { id } = useParams();
-  // const [posts,setPosts] = useState<PostType[]>([]);
 
   const { data } = useOwenerProfileQuery(id!, {
     skip: !id,
@@ -59,7 +57,7 @@ function OwnerProfile() {
               Full Stack MERN Developer
             </p>
 
-            {/* STATS */}
+          
             <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-6">
               <div className="bg-slate-800 px-5 py-3 rounded-2xl">
                 <h2 className="text-white text-xl font-bold">

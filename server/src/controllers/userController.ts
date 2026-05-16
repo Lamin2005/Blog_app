@@ -148,7 +148,7 @@ export const updateProfile = async (
       return res.status(404).json({ message: "User not found" });
     }
 
-    // 🖼 IMAGE UPDATE
+   
     if (req.file) {
       const file = req.file as Express.Multer.File;
 
@@ -162,7 +162,6 @@ export const updateProfile = async (
       };
     }
 
-    // ✏️ UPDATE FIELDS
     if (name) existingUser.name = name;
     if (email) existingUser.email = email;
     if (password) existingUser.password = password;
